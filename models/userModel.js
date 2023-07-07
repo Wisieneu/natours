@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide a password'],
     minlength: [6, 'A password must be 6 characters or more'],
     maxlength: [40, 'A password must be 40 characters or less'],
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -48,6 +49,10 @@ userSchema.pre('save', async function (next) {
   // Delete passwordConfirm field from database containing the raw unencrypted password
   this.passwordConfirm = undefined;
 });
+
+userSchema.methods.correctPassword = async function (candidatePw, userPw) {
+  return await bcrypt.compare(candidatePw, userPw);
+};
 
 const User = mongoose.model('User', userSchema);
 
