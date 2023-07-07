@@ -5,27 +5,27 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A username is required'],
+    required: [true, 'A username is required.'],
     unique: true,
     trim: true,
-    maxlength: [20, 'A username must be 20 characters or less'],
-    minlength: [5, 'A username must be 5 characters or more'],
+    maxlength: [20, 'A username must be 20 characters or less.'],
+    minlength: [5, 'A username must be 5 characters or more.'],
   },
   email: {
     type: String,
-    required: [true, 'An email address is required'],
-    unique: [true, 'An account with that email is already registered'],
+    required: [true, 'An email address is required.'],
+    unique: [true, 'An account with that email is already registered.'],
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, 'Please provide a valid email.'],
   },
   photo: {
     type: String,
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
-    minlength: [6, 'A password must be 6 characters or more'],
-    maxlength: [40, 'A password must be 40 characters or less'],
+    required: [true, 'Please provide a password.'],
+    minlength: [6, 'A password must be 6 characters or more.'],
+    maxlength: [40, 'A password must be 40 characters or less.'],
     select: false,
   },
   passwordConfirm: {
@@ -36,9 +36,10 @@ const userSchema = new mongoose.Schema({
       validator: function (pw) {
         return pw === this.password;
       },
-      message: 'Passwords do not match',
+      message: 'Passwords do not match.',
     },
   },
+  passwordLastChangedAt: Date,
 });
 
 userSchema.pre('save', async function (next) {
@@ -52,6 +53,17 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.correctPassword = async function (candidatePw, userPw) {
   return await bcrypt.compare(candidatePw, userPw);
+};
+
+userSchema.methods.changedPasswordAfter = function (JTWTimestamp) {
+  if (this.passwordLastChangedAt) {
+    const passwordChangedAt = parseInt(
+      this.passwordLastChangedAt.getTime() / 1000,
+      10
+    );
+    return JTWTimestamp < passwordChangedAt; // false (reject req) if pw changed before the request has been sent
+  }
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);

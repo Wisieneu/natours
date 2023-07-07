@@ -7,7 +7,7 @@ const handleCastErrorDB = (err) => {
 
 const handleDuplicateFieldsDB = (err) => {
   const value = err.errmsg.match(/(["'])(?:\\.|[^\\])*?\1/)[0];
-  const message = `Duplicate field value: ${value} - a tour with this name already exists`;
+  const message = `Duplicate field value: ${value} - a tour with this name already exists.`;
   return new AppError(message, 400);
 };
 
@@ -16,6 +16,12 @@ const handleValidationErrorDB = (err) => {
   const message = `Invalid input data. ${errors.join('. ')}.`;
   return new AppError(message, 400);
 };
+
+const handleJWTError = () =>
+  new AppError('Invalid token. Please log in again.', 401);
+
+const handleJWTExpiredError = () =>
+  new AppError('Your login token has expired. Please log in again.', 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
@@ -38,7 +44,7 @@ const sendErrorProd = (err, res) => {
     console.error('Error 💥💥💥:', err);
     res.status(500).json({
       status: 'error',
-      message: 'Something went very wrong',
+      message: 'An unknown error has occurred. Please try again later.',
     });
   }
 };
@@ -53,7 +59,9 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     if (err.name === 'CastError') error = handleCastErrorDB(err);
     if (err.name === 'ValidationError') error = handleValidationErrorDB(err);
-    else if (err.code === 11000) error = handleDuplicateFieldsDB(err);
+    if (err.code === 11000) error = handleDuplicateFieldsDB(err);
+    if (err.name === 'JsonWebTokenError') error = handleJWTError();
+    if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
     sendErrorProd(error, res);
   }
 };
