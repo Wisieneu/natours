@@ -42,13 +42,19 @@ const userSchema = new mongoose.Schema({
       validator: function (pw) {
         return pw === this.password;
       },
-      message: 'Passwords do not match.',
+      message: 'Provided passwords do not match.',
     },
   },
   passwordLastChangedAt: Date,
 
   passwordResetToken: String,
   passwordResetExpires: Date,
+
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -63,7 +69,13 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordLastChangedAt = Date.now() - 1000;
+  this.passwordLastChangedAt = Date.now() - 3000;
+  next();
+});
+
+// /^find/ = any expression that starts with "find"
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
