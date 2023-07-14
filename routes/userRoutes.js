@@ -10,26 +10,18 @@ router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
-router.patch(
-  '/updateMyPassword',
-  authController.loginProtect,
-  authController.updatePassword
-);
 
-router.get(
-  '/me',
-  authController.loginProtect,
-  userController.getMe,
-  userController.getUser
-);
-router.patch('/updateMe', authController.loginProtect, userController.updateMe);
-router.delete(
-  '/deleteMe',
-  authController.loginProtect,
-  userController.deleteMe
-);
+// Login protected routes from here below
+router.use(authController.loginProtect);
+
+router.get('/me', userController.getMe, userController.getUser);
+router.patch('/updateMyPassword', authController.updatePassword);
+router.patch('/updateMe', userController.updateMe);
+router.delete('/deleteMe', userController.deleteMe);
 
 // Admin routes
+router.use(authController.restrictTo('admin'));
+
 router
   .route('/')
   .get(userController.getAllUsers)
