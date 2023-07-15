@@ -106,7 +106,7 @@ exports.loginProtect = catchAsync(async (req, res, next) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role) || req.user.role === 'admin') {
+    if (!roles.includes(req.user.role) || !req.user.role === 'admin') {
       // Reject response if user's role is not in the restricted roles list for that route
       return next(
         new AppError('You do not have permission to perform this action.', 403)
