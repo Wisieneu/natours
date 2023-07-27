@@ -3,8 +3,6 @@
 // Get locations from HTML
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
 
-console.log(locations);
-
 // Create the map and attach it to the #map element
 mapboxgl.accessToken =
   'pk.eyJ1Ijoid2lzaWUiLCJhIjoiY2xraDR3MXZiMDZqOTNybzRjeTdmbnBxMyJ9.UuMU5NB05zWI79T_Rx7Y2A';
