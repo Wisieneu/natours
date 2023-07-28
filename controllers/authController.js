@@ -56,11 +56,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorect email or password.', 401));
   }
   // 3) Send the token to client if all is good
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendAuthToken(user, 200, res);
 });
 
 exports.loginProtect = catchAsync(async (req, res, next) => {
@@ -71,6 +67,8 @@ exports.loginProtect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -101,6 +99,29 @@ exports.loginProtect = catchAsync(async (req, res, next) => {
 
   // Grant access to a login-protected route if all steps above are passed
   req.user = currentUser;
+  next();
+});
+
+// Only for rendered pages, no errors!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt) {
+    // 1) Verify the token
+    const decodedToken = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
+
+    // 2) Check if user still exists or if user changed the password after the token was issued
+    const currentUser = await User.findById(decodedToken.id);
+    if (!currentUser || currentUser.changedPasswordAfter(decodedToken.iat)) {
+      return next();
+    }
+
+    // Confirm that there IS a logged in user
+    res.locals.user = currentUser;
+    req.user = currentUser;
+    return next();
+  }
   next();
 });
 
