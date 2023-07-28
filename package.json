@@ -6,12 +6,15 @@
   "scripts": {
     "start:dev": "SET NODE_ENV=development&&nodemon server.js",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "Bartek Wiśniewski",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-mongo-sanitize": "^2.2.0",
@@ -38,7 +41,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "nodemon": "^3.0.1",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "engines": {
     "node": ">=10.0.0"
