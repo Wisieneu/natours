@@ -109,6 +109,7 @@ exports.loginProtect = catchAsync(async (req, res, next) => {
 
   // Grant access to a login-protected route if all steps above are passed
   req.user = currentUser;
+  res.locals.user = currentUser;
   next();
 });
 
