@@ -25,6 +25,7 @@ const handleJWTExpiredError = () =>
 
 const sendErrorDev = (err, req, res) => {
   // API error handling
+  // console.error(err); // FIXME:DEBUG
   if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -34,6 +35,7 @@ const sendErrorDev = (err, req, res) => {
     });
   } else {
     // Rendered website error handling
+    // console.error(err); // FIXME:DEBUG
     res.status(err.statusCode).render('error', {
       title: 'Error',
       msg: err.message,

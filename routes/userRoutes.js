@@ -17,7 +17,12 @@ router.use(authController.loginProtect);
 
 router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMyPassword', authController.updatePassword);
-router.patch('/updateMe', userController.updateMe);
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 router.delete('/deleteMe', userController.deleteMe);
 
 // Admin routes
