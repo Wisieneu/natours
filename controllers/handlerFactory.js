@@ -71,14 +71,14 @@ exports.getAll = (Model, populateOptions) =>
       .limitFields()
       .paginate();
 
-    const tours = await features.query;
+    const data = await features.query;
 
     // SEND RESPONSE
     res.status(200).json({
       status: 'success',
-      results: tours.length,
+      results: data.length,
       data: {
-        tours,
+        data,
       },
     });
   });
