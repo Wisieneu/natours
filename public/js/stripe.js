@@ -8,17 +8,13 @@ const stripe = Stripe(
 export const bookTour = async (tourId) => {
   // Get the session from the server
   try {
-    const session = await axios(
-      `http://127.0.0.1:8000/api/v1/bookings/checkout-session/${tourId}`
-    );
-    console.log(session);
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
 
     // Create checkout form + charge credit card
     await stripe.redirectToCheckout({
       sessionId: session.data.session.id,
     });
   } catch (err) {
-    console.error(err);
     showAlert('error', err);
   }
   // Create checkout form + charge credit card
