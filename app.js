@@ -8,6 +8,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -52,6 +53,15 @@ app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
+
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin *
+// Example:
+// api.domain.com => front-end on domain.com
+// app.use(cors({ origin: 'https://www.domain.com' }))
+
+app.options('*', cors());
 
 // Data sanitization against XSS
 app.use(xss());
