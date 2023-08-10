@@ -55,10 +55,13 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 //   res.redirect(req.originalUrl.split('?')[0]);
 // });
 
-const createBookingCheckout = async (session) => {
-  const tour = session.client_reference_id;
-  const user = (await User.findOne({ email: session.customer_email })).id;
-  const price = session.line_items[0].price_data.unit_amount / 100;
+const createBookingCheckout = async (paymentData) => {
+  const tour = paymentData.client_reference_id;
+  const user = (
+    await User.findOne({ email: paymentData.customer_details.email })
+  ).id;
+  const price = paymentData.object.amount_total / 100;
+  console.log(tour, user, price);
   await Booking.create({ tour, user, price });
 };
 
@@ -77,7 +80,7 @@ exports.webhookCheckout = async (req, res, next) => {
   }
   console.log(event);
   if (event.type === 'checkout.session.completed') {
-    createBookingCheckout(event.data.object);
+    createBookingCheckout(event.data);
   }
 
   res.status(200).json({ received: true });
