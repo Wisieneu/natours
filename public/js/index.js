@@ -1,4 +1,4 @@
-import { login, logout } from './login';
+import { login, logout, signupUser } from './authentication';
 import { displayMap } from './leaflet';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
@@ -7,6 +7,7 @@ import { bookTour } from './stripe';
 const alertMessage = document.querySelector('body').dataset.alert;
 const leafletMap = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const signupForm = document.querySelector('.form--signup');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const updateUserDataForm = document.querySelector('.form-user-data');
 const updateUserPasswordForm = document.querySelector('.form-user-password');
@@ -27,7 +28,17 @@ if (loginForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password);
-    console.log('dedede');
+  });
+}
+
+if (signupForm) {
+  signupForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    signupUser(name, email, password, passwordConfirm);
   });
 }
 
