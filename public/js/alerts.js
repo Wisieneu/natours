@@ -4,9 +4,9 @@ export const hideAlert = () => {
 };
 
 // Type is either 'success' or 'error' - just for css classes
-export const showAlert = (type, message) => {
+export const showAlert = (type, message, time = 6) => {
   hideAlert();
   const markup = `<div class="alert alert--${type}">${message}</div>`;
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
-  window.setTimeout(hideAlert, 5000);
+  window.setTimeout(hideAlert, time * 1000);
 };
