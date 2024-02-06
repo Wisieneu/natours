@@ -1,7 +1,7 @@
-# Natours
+# [Natours](https://natours.wise-ee.xyz/)
 
-Website can be visited at: https://natours.wizzie.pl/
-The RESTful API documentation can be found [HERE](https://www.postman.com/altimetry-operator-83778665/workspace/natours-public/collection/27584367-0364f169-a07e-493c-a16c-cddc72b096f4?action=share&creator=27584367)  
+Website can be visited at: [https://natours.wise-ee.xyz/](https://natours.wise-ee.xyz/)  
+The RESTful API **Postman** documentation can be found [HERE](https://www.postman.com/altimetry-operator-83778665/workspace/natours-public/collection/27584367-0364f169-a07e-493c-a16c-cddc72b096f4?action=share&creator=27584367)  
 
 > *This was developed under the guidance of *Jonas Schmedtmann's* [Node.js course](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/)* 
 
