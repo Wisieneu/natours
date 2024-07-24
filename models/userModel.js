@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -88,7 +88,7 @@ userSchema.methods.changedPasswordAfter = function (JTWTimestamp) {
   if (this.passwordLastChangedAt) {
     const passwordChangedAt = parseInt(
       this.passwordLastChangedAt.getTime() / 1000,
-      10
+      10,
     );
     return JTWTimestamp < passwordChangedAt; // false (reject req) if pw changed before the request has been sent
   }
